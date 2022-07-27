@@ -11,6 +11,25 @@ class myDate:
     def toString(self):
         retstr=("%d%02d%02d"%(self.year,self.month,self.day))
         return retstr
+    
+    #TODO add support for leap years
+    def nextWeek(self):
+        if(self.month==2 and self.day>=22):
+            #Feb            
+            newMonth=self.month+1
+            newDay=(self.day+7) % 28
+        elif(self.month==(1,3,5,7,8,10,12) and self.day>=25):
+            #months w/ 30 days
+            newMonth=self.month+1
+            newDay=(self.day+7) % 31
+        elif(self.day>=21):
+            #months w/ 30 days
+            newMonth=self.month+1
+        else:
+            #month doesn't increase
+            newMonth=self.month
+            newDay=self.day+7
+        return myDate(self.year,newMonth,newDay)
 
 def printHeader(file):
     with file:
@@ -43,7 +62,7 @@ def printWeek(f, UID, dateStart,dateEnd, weekNum):
 DTSTART;VALUE=DATE:%s
 DTEND;VALUE=DATE:%s
 UID:%s
-DESCRIPTION:This is a reference for the week
+DESCRIPTION:This is a reference for Mqu Session 2 2022
 SEQUENCE:0
 STATUS:CONFIRMED
 SUMMARY:Week %d
@@ -51,7 +70,26 @@ TRANSP:TRANSPARENT
 END:VEVENT
 """ % (dateStart.toString(),dateEnd.toString(),UID,weekNum), file=f)
 
+def printBreak(f, UID, dateStart,dateEnd):
+    print("""BEGIN:VEVENT
+DTSTART;VALUE=DATE:%s
+DTEND;VALUE=DATE:%s
+UID:%s
+DESCRIPTION:This is a reference for Mqu Session 2 2022
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Break
+TRANSP:TRANSPARENT
+END:VEVENT
+""" % (dateStart.toString(),dateEnd.toString(),UID), file=f)
+    
 with open('test.ical','w') as f:
     printHeader(f)
+    numWeeks=13
+    hadBreak=False
+    startDate=myDate(2022,7,24)
+    for x in range(1,numWeeks):
+        printWeek(f,UID,startDate,)
+        
 
 f.close()
